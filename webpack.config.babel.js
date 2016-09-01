@@ -110,9 +110,9 @@ let config = {
 
   entry: [
     'webpack/hot/dev-server',
+
     PATHS.client
   ],
-
   output: {
     path: PATHS.build,
     publicPath: '/',
@@ -127,7 +127,7 @@ let config = {
     contentBase: 'public',
     historyApiFallback: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
-
+    // how much information webpack should output
     stats: {
       colors: true,
       assets: false,
@@ -158,21 +158,25 @@ let config = {
         exclude: /node_modules/,
         loader: 'babel',
         babelrc: false,
+
         query: {
           presets: ['airbnb', 'es2015', 'react'],
           env: {
             development: {
-              presets: ['react-hmre']
+              presets: ['react-hmre'],
+              plugins: [
+                'transform-runtime'
+              ]
+            },
+            production: {
+              plugins: [
+                'transform-runtime',
+                'transform-react-remove-prop-types',
+                'transform-react-constant-elements',
+                'transform-react-inline-elements'
+              ]
             }
-          },
-          plugins: [
-            'transform-runtime',
-            isDev ? [] : [
-              'transform-react-remove-prop-types',
-              'transform-react-constant-elements',
-              'transform-react-inline-elements'
-            ]
-          ]
+          }
         }
       },
       {
